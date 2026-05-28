@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Brain Training VR</title>
+
+  <link rel="preconnect"
+  href="https://fonts.googleapis.com">
+
+  <link rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+
+      font-family:'Poppins',sans-serif;
+
+      min-height:100vh;
+
+      background:
+      linear-gradient(
+      rgba(2,6,23,0.9),
+      rgba(2,6,23,0.95)
+      ),
+      url('../assets/images/hero-bg.jpg');
+
+      background-size:cover;
+      background-position:center;
+
+      color:white;
+
+      padding:40px;
+
+      overflow-x:hidden;
+
+    }
+
+    .container{
+
+      max-width:1200px;
+      margin:auto;
+
+      text-align:center;
+
+    }
+
+    .title{
+
+      margin-bottom:50px;
+
+    }
+
+    .title h1{
+
+      font-size:58px;
+
+      margin-bottom:20px;
+
+      background:
+      linear-gradient(to right,cyan,#60a5fa);
+
+      background-clip:text;
+      -webkit-background-clip:text;
+
+      color:transparent;
+      -webkit-text-fill-color:transparent;
+
+    }
+
+    .title p{
+
+      color:#cbd5e1;
+
+      line-height:1.8;
+
+      font-size:20px;
+
+    }
+
+    .stats{
+
+      display:flex;
+      justify-content:center;
+      gap:40px;
+
+      margin-bottom:40px;
+
+      flex-wrap:wrap;
+
+    }
+
+    .stat-box{
+
+      background:rgba(255,255,255,0.08);
+
+      border:1px solid rgba(255,255,255,0.1);
+
+      backdrop-filter:blur(12px);
+
+      padding:20px 35px;
+
+      border-radius:20px;
+
+      font-size:22px;
+
+      color:cyan;
+
+      box-shadow:
+      0 0 20px rgba(0,255,255,0.1);
+
+    }
+
+    .game-board{
+
+      display:grid;
+
+      grid-template-columns:
+      repeat(4,150px);
+
+      gap:25px;
+
+      justify-content:center;
+
+    }
+
+    .card{
+
+      width:150px;
+      height:150px;
+
+      background:
+      linear-gradient(
+      135deg,
+      cyan,
+      #2563eb
+      );
+
+      border-radius:24px;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      font-size:55px;
+
+      cursor:pointer;
+
+      transition:0.4s;
+
+      transform-style:preserve-3d;
+
+      color:transparent;
+
+      user-select:none;
+
+      box-shadow:
+      0 0 20px rgba(0,255,255,0.2);
+
+    }
+
+    .card:hover{
+
+      transform:
+      translateY(-8px)
+      scale(1.03);
+
+      box-shadow:
+      0 0 30px cyan;
+
+    }
+
+    .card.flipped{
+
+      background:white;
+
+      color:black;
+
+      transform:rotateY(180deg);
+
+    }
+
+    .controls{
+
+      margin-top:40px;
+
+    }
+
+    button{
+
+      padding:16px 28px;
+
+      border:none;
+
+      border-radius:50px;
+
+      cursor:pointer;
+
+      font-size:16px;
+
+      font-weight:600;
+
+      transition:0.4s;
+
+      background:
+      linear-gradient(
+      135deg,
+      cyan,
+      #2563eb
+      );
+
+      color:white;
+
+    }
+
+    button:hover{
+
+      transform:translateY(-5px);
+
+      box-shadow:
+      0 0 20px cyan;
+
+    }
+
+    .message{
+
+      margin-top:35px;
+
+      font-size:28px;
+
+      color:#e2e8f0;
+
+      min-height:50px;
+
+    }
+
+    .instructions{
+
+      margin-top:40px;
+
+      max-width:900px;
+
+      margin-inline:auto;
+
+      padding:30px;
+
+      border-radius:24px;
+
+      background:rgba(255,255,255,0.06);
+
+      line-height:2;
+
+      color:#cbd5e1;
+
+    }
+
+    @media(max-width:900px){
+
+      .game-board{
+
+        grid-template-columns:
+        repeat(2,130px);
+
+      }
+
+      .card{
+
+        width:130px;
+        height:130px;
+
+      }
+
+      .title h1{
+        font-size:42px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="title">
+
+      <h1>🧠 Brain Training VR</h1>
+
+      <p>
+
+        Improve memory, concentration,
+        and focus through interactive
+        cognitive training games.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="stats">
+
+      <div class="stat-box"
+      id="moves">
+
+        Moves: 0
+
+      </div>
+
+
+      <div class="stat-box"
+      id="matches">
+
+        Matches: 0
+
+      </div>
+
+    </div>
+
+
+
+    <div class="game-board"
+    id="gameBoard">
+
+    </div>
+
+
+
+    <div class="controls">
+
+      <button onclick="restartGame()">
+
+        🔄 Restart Game
+
+      </button>
+
+    </div>
+
+
+
+    <div class="message"
+    id="message">
+
+      Match all cards to win.
+
+    </div>
+
+
+
+    <div class="instructions">
+
+      <h2>✨ How This Helps</h2>
+
+      <br>
+
+      This memory training game helps improve:
+
+      <br><br>
+
+      ✅ Focus and concentration
+      <br>
+
+      ✅ Short-term memory
+      <br>
+
+      ✅ Cognitive flexibility
+      <br>
+
+      ✅ Pattern recognition
+      <br>
+
+      ✅ Mental response speed
+
+    </div>
+
+  </div>
+
+
+
+  <script>
+
+    const symbols = [
+
+      '🧠','🧠',
+
+      '🌟','🌟',
+
+      '🚀','🚀',
+
+      '🎮','🎮'
+
+    ];
+
+
+
+    let shuffledCards =
+    symbols.sort(() => 0.5 - Math.random());
+
+
+
+    const gameBoard =
+    document.getElementById('gameBoard');
+
+
+
+    let firstCard = null;
+
+    let secondCard = null;
+
+    let lockBoard = false;
+
+    let moves = 0;
+
+    let matches = 0;
+
+
+
+    function createBoard(){
+
+      gameBoard.innerHTML = '';
+
+      shuffledCards.forEach(symbol => {
+
+        const card =
+        document.createElement('div');
+
+        card.classList.add('card');
+
+        card.dataset.symbol = symbol;
+
+        card.innerHTML = symbol;
+
+        card.addEventListener(
+        'click',
+        flipCard
+        );
+
+        gameBoard.appendChild(card);
+
+      });
+
+    }
+
+
+
+    function flipCard(){
+
+      if(
+      lockBoard ||
+      this === firstCard
+      ){
+
+        return;
+
+      }
+
+      this.classList.add('flipped');
+
+
+
+      if(!firstCard){
+
+        firstCard = this;
+
+        return;
+
+      }
+
+
+
+      secondCard = this;
+
+      lockBoard = true;
+
+      moves++;
+
+      updateMoves();
+
+
+
+      checkMatch();
+
+    }
+
+
+
+    function checkMatch(){
+
+      if(
+      firstCard.dataset.symbol ===
+      secondCard.dataset.symbol
+      ){
+
+        matches++;
+
+        updateMatches();
+
+        resetBoard();
+
+
+
+        if(matches === 4){
+
+          document
+          .getElementById('message')
+          .innerHTML =
+
+          '🏆 Congratulations! You matched all cards.';
+
+        }
+
+      }
+
+      else{
+
+        setTimeout(()=>{
+
+          firstCard.classList.remove(
+          'flipped'
+          );
+
+          secondCard.classList.remove(
+          'flipped'
+          );
+
+          resetBoard();
+
+        },1000);
+
+      }
+
+    }
+
+
+
+    function resetBoard(){
+
+      firstCard = null;
+
+      secondCard = null;
+
+      lockBoard = false;
+
+    }
+
+
+
+    function updateMoves(){
+
+      document
+      .getElementById('moves')
+      .innerHTML =
+
+      'Moves: ' + moves;
+
+    }
+
+
+
+    function updateMatches(){
+
+      document
+      .getElementById('matches')
+      .innerHTML =
+
+      'Matches: ' + matches;
+
+    }
+
+
+
+    function restartGame(){
+
+      shuffledCards =
+      symbols.sort(() => 0.5 - Math.random());
+
+      firstCard = null;
+
+      secondCard = null;
+
+      lockBoard = false;
+
+      moves = 0;
+
+      matches = 0;
+
+      updateMoves();
+
+      updateMatches();
+
+      document
+      .getElementById('message')
+      .innerHTML =
+
+      'Match all cards to win.';
+
+      createBoard();
+
+    }
+
+
+
+    createBoard();
+
+  </script>
+
+</body>
+</html>

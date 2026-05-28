@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>World Explorer VR</title>
+
+  <link rel="preconnect"
+  href="https://fonts.googleapis.com">
+
+  <link rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet">
+
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+
+      font-family:'Poppins',sans-serif;
+
+      background:#020617;
+
+      color:white;
+
+      overflow-x:hidden;
+
+    }
+
+    .top-section{
+
+      min-height:100vh;
+
+      padding:40px;
+
+      background:
+      linear-gradient(
+      rgba(2,6,23,0.95),
+      rgba(2,6,23,0.98)
+      );
+
+    }
+
+    .container{
+
+      max-width:1300px;
+      margin:auto;
+
+    }
+
+    .title{
+
+      text-align:center;
+
+      margin-bottom:50px;
+
+    }
+
+    .title h1{
+
+      font-size:65px;
+
+      margin-bottom:20px;
+
+      background:
+      linear-gradient(to right,cyan,#60a5fa);
+
+      background-clip:text;
+      -webkit-background-clip:text;
+
+      color:transparent;
+      -webkit-text-fill-color:transparent;
+
+    }
+
+    .title p{
+
+      font-size:22px;
+
+      line-height:1.8;
+
+      color:#cbd5e1;
+
+      max-width:1000px;
+
+      margin:auto;
+
+    }
+
+    .search-box{
+
+      display:flex;
+
+      justify-content:center;
+
+      gap:20px;
+
+      flex-wrap:wrap;
+
+      margin-top:60px;
+
+    }
+
+    input{
+
+      width:420px;
+
+      padding:18px;
+
+      border:none;
+
+      border-radius:50px;
+
+      outline:none;
+
+      background:rgba(255,255,255,0.08);
+
+      backdrop-filter:blur(10px);
+
+      color:white;
+
+      font-size:18px;
+
+    }
+
+    button{
+
+      padding:18px 30px;
+
+      border:none;
+
+      border-radius:50px;
+
+      cursor:pointer;
+
+      font-size:16px;
+
+      font-weight:600;
+
+      transition:0.4s;
+
+      background:
+      linear-gradient(
+      135deg,
+      cyan,
+      #2563eb
+      );
+
+      color:white;
+
+    }
+
+    button:hover{
+
+      transform:
+      translateY(-5px)
+      scale(1.03);
+
+      box-shadow:
+      0 0 25px cyan;
+
+    }
+
+    .places{
+
+      display:grid;
+
+      grid-template-columns:
+      repeat(auto-fit,minmax(260px,1fr));
+
+      gap:30px;
+
+      margin-top:70px;
+
+    }
+
+    .card{
+
+      background:rgba(255,255,255,0.08);
+
+      border:1px solid rgba(255,255,255,0.1);
+
+      backdrop-filter:blur(14px);
+
+      border-radius:30px;
+
+      padding:35px;
+
+      text-align:center;
+
+      transition:0.4s;
+
+    }
+
+    .card:hover{
+
+      transform:
+      translateY(-10px)
+      scale(1.03);
+
+      box-shadow:
+      0 0 25px cyan;
+
+    }
+
+    .card h2{
+
+      color:cyan;
+
+      margin-bottom:20px;
+
+      font-size:34px;
+
+    }
+
+    .card p{
+
+      line-height:1.8;
+
+      color:#cbd5e1;
+
+      margin-bottom:25px;
+
+    }
+
+    .instructions{
+
+      margin-top:60px;
+
+      background:rgba(255,255,255,0.06);
+
+      border-radius:30px;
+
+      padding:35px;
+
+      text-align:center;
+
+      line-height:2;
+
+      color:#cbd5e1;
+
+      font-size:18px;
+
+    }
+
+    .instructions h2{
+
+      color:cyan;
+
+      margin-bottom:20px;
+
+    }
+
+    .vr-section{
+
+      width:100%;
+
+      height:100vh;
+
+      position:relative;
+
+      margin-top:60px;
+
+    }
+
+    iframe{
+
+      width:100%;
+
+      height:100vh;
+
+      border:none;
+
+      border-radius:20px;
+
+    }
+
+    .overlay{
+
+      position:absolute;
+
+      top:20px;
+      left:20px;
+
+      z-index:999;
+
+      background:
+      rgba(0,0,0,0.6);
+
+      padding:20px 25px;
+
+      border-radius:20px;
+
+      backdrop-filter:blur(10px);
+
+    }
+
+    .overlay h3{
+
+      color:cyan;
+
+      margin-bottom:12px;
+
+      font-size:28px;
+
+    }
+
+    .overlay p{
+
+      color:#e2e8f0;
+
+      line-height:1.9;
+
+      font-size:18px;
+
+    }
+
+    @media(max-width:768px){
+
+      .title h1{
+        font-size:42px;
+      }
+
+      input{
+        width:100%;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+  <!-- TOP SECTION -->
+
+  <section class="top-section">
+
+    <div class="container">
+
+      <div class="title">
+
+        <h1>🌍 World Explorer VR</h1>
+
+        <p>
+
+          Helping wheelchair users and mobility-impaired individuals
+          virtually travel and explore famous places
+          through immersive VR experiences
+          without physical accessibility barriers.
+
+        </p>
+
+      </div>
+
+
+
+      <!-- SEARCH -->
+
+      <div class="search-box">
+
+        <input
+        type="text"
+        id="placeInput"
+        placeholder="Enter a place in India">
+
+        <button onclick="searchPlace()">
+
+          🌍 Explore in VR
+
+        </button>
+
+      </div>
+
+
+
+      <!-- PLACE CARDS -->
+
+      <div class="places">
+
+        <div class="card">
+
+          <h2>🕌 Taj Mahal</h2>
+
+          <p>
+
+            Explore the Taj Mahal
+            through immersive virtual travel.
+
+          </p>
+
+          <button onclick="loadPlace('taj')">
+
+            Explore
+
+          </button>
+
+        </div>
+
+
+
+        <div class="card">
+
+          <h2>🏛 India Gate</h2>
+
+          <p>
+
+            Virtually experience India Gate
+            in immersive street view.
+
+          </p>
+
+          <button onclick="loadPlace('gate')">
+
+            Explore
+
+          </button>
+
+        </div>
+
+
+
+        <div class="card">
+
+          <h2>🌊 Marina Beach</h2>
+
+          <p>
+
+            Relax and explore Marina Beach
+            virtually from home.
+
+          </p>
+
+          <button onclick="loadPlace('beach')">
+
+            Explore
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- INFO -->
+
+      <div class="instructions">
+
+        <h2>✨ Accessibility Impact</h2>
+
+        This module helps wheelchair users
+        and mobility-impaired individuals
+        explore the world virtually
+        without facing physical travel barriers.
+
+        <br><br>
+
+        ✅ Real immersive street view
+        <br>
+
+        ✅ Virtual tourism
+        <br>
+
+        ✅ Explore places from home
+        <br>
+
+        ✅ Accessible digital travel
+        <br>
+
+        ✅ Emotional accessibility inclusion
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- VR SECTION -->
+
+  <section class="vr-section">
+
+
+    <!-- CONTROLS -->
+
+    <div class="overlay">
+
+      <h3>🎮 Explore in VR</h3>
+
+      <p>
+
+        Drag and rotate to explore
+        famous places virtually.
+
+      </p>
+
+    </div>
+
+
+
+    <!-- GOOGLE STREET VIEW -->
+
+    <iframe
+
+    id="vrFrame"
+
+    src="https://www.google.com/maps/embed?pb=!4v1710000000000!6m8!1m7!1sCAoSLEFGMVFpcE5zTjB2T3M2Q2F2bXNsS1Nfd0JxN3l2QXQ0QzN2Rk9LQm5sWmVQ!2m2!1d27.1751448!2d78.0421422!3f0!4f0!5f0.7820865974627469"
+
+    allowfullscreen
+
+    loading="lazy"
+
+    referrerpolicy="no-referrer-when-downgrade">
+
+    </iframe>
+
+  </section>
+
+
+
+  <script>
+
+    const frame =
+    document.getElementById('vrFrame');
+
+
+
+    function speak(text){
+
+      const speech =
+      new SpeechSynthesisUtterance(text);
+
+      speech.rate = 0.9;
+
+      speechSynthesis.speak(speech);
+
+    }
+
+
+
+    function loadPlace(place){
+
+      if(place === 'taj'){
+
+        frame.src =
+        'https://www.google.com/maps/embed?pb=!4v1710000000000!6m8!1m7!1sCAoSLEFGMVFpcE5zTjB2T3M2Q2F2bXNsS1Nfd0JxN3l2QXQ0QzN2Rk9LQm5sWmVQ!2m2!1d27.1751448!2d78.0421422!3f0!4f0!5f0.7820865974627469';
+
+        speak(
+        'Welcome to Taj Mahal virtual reality experience.'
+        );
+
+      }
+
+
+
+      else if(place === 'gate'){
+
+        frame.src =
+        'https://www.google.com/maps/embed?pb=!4v1710000000000!6m8!1m7!1sCAoSLEFGMVFpcFBVYjB5V1V3bEJ2Z2hCV1VwQ1A4M3R1YjRjNm1mVnl4dVh4a0xW!2m2!1d28.612912!2d77.229509!3f0!4f0!5f0.7820865974627469';
+
+        speak(
+        'Welcome to India Gate virtual experience.'
+        );
+
+      }
+
+
+
+      else if(place === 'beach'){
+
+        frame.src =
+        'https://www.google.com/maps/embed?pb=!4v1710000000000!6m8!1m7!1sCAoSLEFGMVFpcE9Qd0xLWXh6d1Y1MktxR0RNd1J6YjVnS2NqTHdKc3Q5Y3Y5QmFQ!2m2!1d13.047487!2d80.282997!3f0!4f0!5f0.7820865974627469';
+
+        speak(
+        'Welcome to Marina Beach virtual experience.'
+        );
+
+      }
+
+    }
+
+
+
+    function searchPlace(){
+
+      const input =
+      document
+      .getElementById('placeInput')
+      .value
+      .toLowerCase();
+
+
+
+      if(input.includes('taj')){
+
+        loadPlace('taj');
+
+      }
+
+      else if(input.includes('india')){
+
+        loadPlace('gate');
+
+      }
+
+      else if(input.includes('marina')){
+
+        loadPlace('beach');
+
+      }
+
+      else{
+
+        alert(
+        'Place not available in VR demo yet.'
+        );
+
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
